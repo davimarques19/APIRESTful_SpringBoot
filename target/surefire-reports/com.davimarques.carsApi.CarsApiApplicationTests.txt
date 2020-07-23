@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: com.davimarques.carsApi.CarsApiApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 1.381 s <<< FAILURE! - in com.davimarques.carsApi.CarsApiApplicationTests
+contextLoads  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'swaggerConfig': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.project.version' in value "${spring.project.version}"
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'spring.project.version' in value "${spring.project.version}"
+
