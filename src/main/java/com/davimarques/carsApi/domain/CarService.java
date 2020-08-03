@@ -1,11 +1,13 @@
 package com.davimarques.carsApi.domain;
 
+import com.davimarques.carsApi.domain.dto.CarDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarService {
@@ -13,47 +15,49 @@ public class CarService {
     @Autowired
     private CarRepository carRepository;
 
-    public Iterable<Car> getCars() {
-        return carRepository.findAll();
+    public List<CarDTO> getCars() {
+        return carRepository.findAll().stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
-    public Optional<Car> getCarById(Long id) {
-        return carRepository.findById(id);
+    public Optional<CarDTO> getCarById(Long id) {
+        return carRepository.findById(id).map(CarDTO::create);
     }
 
-    public List<Car> getCarByType(String type) {
-        return carRepository.findByType(type);
+    public List<CarDTO> getCarByType(String type) {
+        return carRepository.findByType(type).stream().map(CarDTO::create).collect(Collectors.toList());
     }
 
-    public Car saveCar(Car car) {
-        return carRepository.save(car);
+    public CarDTO insertCar(Car car) {
+        Assert.isNull(car.getId(), "Não foi possível inserir o carro");
+        return CarDTO.create(carRepository.save(car));
     }
-
-    public Car update(Car car, Long id) {
+    public CarDTO update(Car car, Long id) {
 
         Assert.notNull(id, "Não foi possível encontrar o id");
 
-        Optional<Car> optional = getCarById(id);
+        Optional<Car> optional = carRepository.findById(id);
 
-        if(optional.isPresent()) {
+        if (optional.isPresent()) {
             Car carDB = optional.get();
             carDB.setName(car.getName());
             carDB.setType(car.getType());
 
             carRepository.save(carDB);
 
-            return carDB;
+            return CarDTO.create(carDB);
         } else {
             throw new RuntimeException("Não foi possível atualizar o registro");
         }
 
     }
 
-    public void delete(Long id) {
-        Optional<Car> car = getCarById(id);
-        if(car.isPresent()) {
+    public boolean delete(Long id) {
+        if (getCarById(id).isPresent()) {
             carRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
         }
     }
-    
+
 }
