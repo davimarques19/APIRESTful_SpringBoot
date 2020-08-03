@@ -3,8 +3,10 @@ package com.davimarques.carsApi.controller;
 import com.davimarques.carsApi.domain.Car;
 import com.davimarques.carsApi.domain.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -15,18 +17,26 @@ public class CarsController {
     private CarService carService;
 
     @GetMapping()
-    public Iterable<Car> getAll() {
-        return carService.getCars();
+    public ResponseEntity<Iterable<Car>> getAll() {
+
+        return ResponseEntity.ok(carService.getCars());
     }
 
     @GetMapping("/{id}")
-    public Optional<Car> getCarById(@PathVariable("id") Long id) {
-        return carService.getCarById(id);
+    public ResponseEntity getCarById(@PathVariable("id") Long id) {
+
+        Optional<Car> car = carService.getCarById(id);
+
+        return car.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/type/{type}")
-    public Iterable<Car> getCarByType(@PathVariable("type") String type) {
-        return carService.getCarByType(type);
+    public ResponseEntity getCarsByType(@PathVariable("type") String type) {
+        List<Car> carsType = carService.getCarByType(type);
+
+        return carsType.isEmpty() ?
+                ResponseEntity.noContent().build() :
+                ResponseEntity.ok(carsType);
     }
 
     @PostMapping

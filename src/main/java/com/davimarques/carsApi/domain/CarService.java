@@ -1,22 +1,12 @@
 package com.davimarques.carsApi.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Optional;
 
-
-/*
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-*/
 @Service
 public class CarService {
 
@@ -31,7 +21,7 @@ public class CarService {
         return carRepository.findById(id);
     }
 
-    public Iterable<Car> getCarByType(String type) {
+    public List<Car> getCarByType(String type) {
         return carRepository.findByType(type);
     }
 
